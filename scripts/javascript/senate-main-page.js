@@ -3,9 +3,9 @@ import {data} from '../data/senateData.mjs';
 
 const wholeSenateData = data.results[0].members;  // This gets the whole data about only members from json file
 
-// This filters the edata about the member to have only the required data like name, state, party ...
+// This one filters the data about the members to have only the required data like name, state, party ...
 // [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects inside the array and
-// each object has these propeerties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
+// each object has these properties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
 const summarySenateData = wholeSenateData.map(member => ({name: `${member.first_name} ${member.last_name}`,
     party: member.party, state: member.state, yearsInOffice: member.seniority, votePercentageWithParty: member.votes_with_party_pct, linkUrl: member.url}));
 
@@ -14,7 +14,8 @@ const  tableBody = document.getElementById('senate-data'); // senate-data is the
 summarySenateData.forEach((member) =>  {         // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
     const tableRow = document.createElement('tr');
     Object.values(member).forEach((value, index, array) => {   // Object.values(member) is ['xxx', 'D', 'MI,....]
-        if (index < array.length-1){             // This condition to eliminate the urls. Only one array has been created (summarySenateData). Another array for the urls wasn't created.
+        if (index < array.length-1){             // This condition to filter the urls not to show in the table. Only one array has been created (summarySenateData).
+                                                 // Another array for the urls wasn't created to have the consistent.
             const rowCell = document.createElement('td');
             if (index === 0){         // adding the links to the names
                 const anchorTag = document.createElement('a');
