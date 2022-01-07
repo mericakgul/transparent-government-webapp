@@ -18,10 +18,6 @@ header {
     width: 90%;
 }
 
-h1, p, table {
-    margin-top: 20px;
-}
-
 .logo-container {
     display: flex;
     justify-content: center;
@@ -38,13 +34,28 @@ h1, p, table {
     font-size: 30px;
 }
 
-.senators-container, .senate-data-container {
+.senators-container, .senate-data-container, .filter-container {
     display: flex;
     justify-content: center;
 }
 
 .senators, .senate-data-container table {
     width: 90%;
+}
+
+.filters {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+
+.party-filter {
+    display: flex;
+}
+
+.party-filter .form-check {
+    margin-left: 10px;
 }
 
 .footer-container { /* added to be able to center the footer with 90% width same as header-container and senator-container*/
