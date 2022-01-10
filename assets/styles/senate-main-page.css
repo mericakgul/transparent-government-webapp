@@ -47,14 +47,31 @@ header {
     width: 90%;
     display: flex;
     justify-content: space-between;
-    padding-top: 20px;
+    margin-top: 10px;
+}
+
+.filters p {
+    margin-bottom: 2px;
 }
 
 .party-filter {
     display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.state-filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
 }
 
 .party-filter .form-check {
+    margin-left: 10px;
+}
+
+.state-filter select {
+    width: 40%;       /* If I don't put this width, p element gets multiple lines. Why?  */
     margin-left: 10px;
 }
 
