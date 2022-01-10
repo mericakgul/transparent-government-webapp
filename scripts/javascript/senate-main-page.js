@@ -1,40 +1,63 @@
-
 import {data} from '../data/senateData.mjs';
+import {states} from "../data/states.mjs";
+
+const {members : wholeSenateData} = data.results[0]; // this is another way: data.results[0].members;
+                                                        // This gets the whole data about only members from json file. And the property name members is renamed as wholeSenateData
 
 Array.from(document.querySelectorAll('.form-check-input'))
     .forEach(element => element
         .addEventListener('click', (event) => {
-            console.log('event: ', event);
             initTable();
 }));
 
+document.querySelector('#stateList').addEventListener('change', event => initTable());
+
+initTable();
+
 function initTable () {
+    createStatesDropDown ();
     document.getElementById('senate-data').innerHTML = '';
-    const {members} = data.results[0]; // this is another way: data.results[0].members; // This gets the whole data about only members from json file
-
-    const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))  // This line returns all the check-box elements as an object of each in an array.
-        .filter(({checked}) => checked)  // This line is to filter the unchecked items from the array
-        .map(({value}) => value); // This line is to get the checked items' values in an array like ['R', 'D', 'ID']
-
-// This one filters the data about the members to have only the required data like name, state, party ...
-// [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects inside the array and
-// each object has these properties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
-    const summarySenateData = members
-                                .filter(member => checkedParties.includes(member.party))
-                                .map(member => ({name: `${member.first_name} ${member.last_name}`,
-                                                party: member.party,
-                                                state: member.state,
-                                                yearsInOffice: member.seniority,
-                                                votePercentageWithParty: member.votes_with_party_pct,
-                                                linkUrl: member.url}));
-
-    console.log('summarySenateData: ', summarySenateData);
-
+    const summarySenateData = filterData();
     createTable(summarySenateData);
 }
 
-function createTable (tableData) {
-    tableData.forEach(createTableRow);
+function createStatesDropDown () {
+    const  statesDropdown = document.getElementById('stateList'); // stateList is the id of the dropdown element in html
+    states.forEach(({name, abbreviation}) => {
+        const dropdownOption = document.createElement('option');
+        dropdownOption.value = abbreviation;
+        const optionText = document.createTextNode(name);
+        dropdownOption.appendChild(optionText);
+        statesDropdown.appendChild(dropdownOption);
+    })
+}
+
+function filterData() {
+    const selectedState = Array.from(document.querySelectorAll('#stateList option')).filter(({selected}) => selected)[0];
+    const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))  // This line returns all the check-box elements as an object of each in an array.
+        //.filter(member => member.checked)  // This is the first way. The bottom line is destructing.
+        .filter(({checked}) => checked)  // This line is to filter the unchecked items from the array.
+        //.map(member => member.value)  // This is the first way. The bottom line is destructing.
+        .map(({value}) => value); // This line is to get the checked items' values in an array like ['R', 'D', 'ID']
+
+    // This part filters the data about the members to have only the required data like name, state, party ...
+    // [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects (if not  filtered) inside the array and
+    // each object has these properties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
+    const filteredDataByParty = wholeSenateData.filter(({party}) => checkedParties.includes(party)); // This line filters the senate list by party according to checkboxes
+    const filteredData = selectedState.value !== 'default' ?
+        filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the senate list according to selected states from the dropdown and also according to party checkboxes
+        filteredDataByParty;
+    return filteredData
+        .map(member => ({name: `${member.first_name} ${member.last_name}`,
+            party: member.party,
+            state: member.state,
+            yearsInOffice: member.seniority,
+            votePercentageWithParty: member.votes_with_party_pct,
+            linkUrl: member.url}));
+}
+
+function createTable (senateData) {
+    senateData.forEach(createTableRow);
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
@@ -62,17 +85,6 @@ function createAnchorTag(anchorText, urlValue) {
     anchorTag.appendChild(anchorTagText);
     return anchorTag;
 }
-
-
-initTable();
-
-
-
-
-// const filterSenateDataByParty = (party) => summarySenateData.filter(member => member.party === party);
-//
-// console.log('democrats: ', filterSenateDataByParty('ID'));
-
 
 
 

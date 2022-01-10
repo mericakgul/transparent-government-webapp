@@ -63,7 +63,9 @@ header {
 .state-filter {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     margin-bottom: 5px;
+    width: 40%;
 }
 
 .party-filter .form-check {
@@ -71,7 +73,7 @@ header {
 }
 
 .state-filter select {
-    width: 40%;       /* If I don't put this width, p element gets multiple lines. Why?  */
+    width: 50%;       /* If I don't put this width, p element gets multiple lines. Why?  */
     margin-left: 10px;
 }
 
