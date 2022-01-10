@@ -6,16 +6,15 @@ Array.from(document.querySelectorAll('.form-check-input'))
         .addEventListener('click', (event) => {
             console.log('event: ', event);
             initTable();
-            // alert('test message')
 }));
 
 function initTable () {
     document.getElementById('senate-data').innerHTML = '';
-    const {members} = data.results[0]; // data.results[0].members; // This gets the whole data about only members from json file
+    const {members} = data.results[0]; // this is another way: data.results[0].members; // This gets the whole data about only members from json file
 
-    const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))
-        .filter(({checked}) => checked)
-        .map(({value}) => value);
+    const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))  // This line returns all the check-box elements as an object of each in an array.
+        .filter(({checked}) => checked)  // This line is to filter the unchecked items from the array
+        .map(({value}) => value); // This line is to get the checked items' values in an array like ['R', 'D', 'ID']
 
 // This one filters the data about the members to have only the required data like name, state, party ...
 // [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects inside the array and
