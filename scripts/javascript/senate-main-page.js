@@ -2,31 +2,25 @@ import {senateData} from '../data/senateData.mjs';
 import {states} from "../data/states.mjs";
 
 const {members : wholeSenateData} = senateData.results[0]; // this is another way: data.results[0].members;
-                                                        // This gets the whole data about only members from json file. And the property name members is renamed as wholeSenateData
+// This gets the whole data about only members from json file. And the property name members is renamed as wholeSenateData
 
-const statesInSenateData = [...new Set(wholeSenateData.map(({state}) => state))];
-console.log('statesInSenateData', statesInSenateData);
+const statesInSenateData = () => {
+    const stateAbbreviationsInStateData = [...new Set(wholeSenateData.map(({state}) => state))].sort(); // This line gets all the state values from the whole senate data.
+                                                                                                        // To remove the duplicated values; first set is created and set is converted back to an array
+                                                                                                        // This is an array like ['AL', 'AK', 'AZ',.....], But it keeps only the abbreviations, not the names.
 
-Array.from(document.querySelectorAll('.form-check-input'))
-    .forEach(element => element
-        .addEventListener('click', (event) => {
-            initTable();
-}));
-
-document.querySelector('#stateList').addEventListener('change', event => initTable());
-
-initTable();
-
-function initTable () {
-    createStatesDropDown ();
-    document.getElementById('senate-data').innerHTML = '';
-    const summarySenateData = filterData();
-    createTable(summarySenateData);
+    return states.filter(state => stateAbbreviationsInStateData.includes(state.abbreviation));          // This line filters the state list according to the states used in the senate data.
 }
 
-function createStatesDropDown () {
+
+function initTable () {
+    document.getElementById('senate-data').innerHTML = '';
+    createTable(filterData());     // IS THIS A GOOD PRACTICE? **************************************
+}
+
+function createStatesDropDown (stateData) {
     const  statesDropdown = document.getElementById('stateList'); // stateList is the id of the dropdown element in html
-    states.forEach(({name, abbreviation}) => {
+    stateData.forEach(({name, abbreviation}) => {
         const dropdownOption = document.createElement('option');
         dropdownOption.value = abbreviation;
         const optionText = document.createTextNode(name);
@@ -51,11 +45,11 @@ function filterData() {
         wholeSenateData.filter(({party}) => checkedParties.includes(party)) : // This line filters the senate list by party according to checked checkboxes
         wholeSenateData;                                     // In case no checkbox is selected then no need to filter the data by party because we show whole data in the table in this case
 
-    const filteredData = selectedState.value !== 'default' ?  // This line checks if the state dropdown doesn't have the default value ('Select A State')
+    const filteredCongressData = selectedState.value !== "" ?  // This line checks if the state dropdown doesn't have the default value ('Select A State')
         filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the senate list according to selected states from the dropdown
         filteredDataByParty;                                   // In case the dropdown has the default value no need to filter the data according to dropdown.
 
-    return filteredData         // These lines are mapping the senate data after the filters with the summary data (name, party, state,...)
+    return filteredCongressData         // These lines are mapping the senate data after the filters with the summary data (name, party, state,...)
         .map(member => ({
             name: `${member.first_name} ${member.last_name}`,
             party: member.party,
@@ -66,8 +60,8 @@ function filterData() {
         }));
 }
 
-function createTable (senateData) {
-    senateData.forEach(createTableRow);
+function createTable (filteredCongressData) {
+    filteredCongressData.forEach(createTableRow);
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
@@ -95,6 +89,17 @@ function createAnchorTag(anchorText, urlValue) {
     anchorTag.appendChild(anchorTagText);
     return anchorTag;
 }
+
+initTable();
+createStatesDropDown(statesInSenateData());   // IS THIS A GOOD PRACTICE? **************************************
+
+Array.from(document.querySelectorAll('.form-check-input'))
+    .forEach(element => element
+        .addEventListener('click', (event) => {
+            initTable();
+        }));
+
+document.querySelector('#stateList').addEventListener('change', event => initTable());
 
 
 
