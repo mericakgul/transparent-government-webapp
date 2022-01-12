@@ -13,9 +13,10 @@ const statesInSenateData = () => {
 }
 
 
-function initTable () {
+function initSenateMemberTable () {
     document.getElementById('senate-data').innerHTML = '';
-    createTable(filterData());     // IS THIS A GOOD PRACTICE? **************************************
+    const filteredCongressData = filterData(wholeSenateData);
+    createTable(filteredCongressData);
 }
 
 function createStatesDropDown (stateData) {
@@ -29,7 +30,7 @@ function createStatesDropDown (stateData) {
     })
 }
 
-function filterData() {
+function filterData(wholeCongressData) {
     const selectedState = Array.from(document.querySelectorAll('#stateList option')).filter(({selected}) => selected)[0]; // This line is to get the selected state from the dropdown.
                                                                                                                                     // This array has only one element which is the object of selected dropdown element.
     const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))  // This line returns all the check-box elements as an object of each in an array.
@@ -42,8 +43,8 @@ function filterData() {
     // [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects (if not  filtered) inside the array and
     // each object has these properties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
     const filteredDataByParty = checkedParties.length !== 0 ?  // This line checks if any checkboxes is selected.
-        wholeSenateData.filter(({party}) => checkedParties.includes(party)) : // This line filters the senate list by party according to checked checkboxes
-        wholeSenateData;                                     // In case no checkbox is selected then no need to filter the data by party because we show whole data in the table in this case
+        wholeCongressData.filter(({party}) => checkedParties.includes(party)) : // This line filters the senate list by party according to checked checkboxes
+        wholeCongressData;                                     // In case no checkbox is selected then no need to filter the data by party because we show whole data in the table in this case
 
     const filteredCongressData = selectedState.value !== "" ?  // This line checks if the state dropdown doesn't have the default value ('Select A State')
         filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the senate list according to selected states from the dropdown
@@ -90,7 +91,7 @@ function createAnchorTag(anchorText, urlValue) {
     return anchorTag;
 }
 
-initTable();
+initSenateMemberTable();
 createStatesDropDown(statesInSenateData());   // IS THIS A GOOD PRACTICE? **************************************
 
 Array.from(document.querySelectorAll('.form-check-input'))
