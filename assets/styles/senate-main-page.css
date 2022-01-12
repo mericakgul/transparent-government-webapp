@@ -80,8 +80,8 @@ header {
 .footer-container { /* added to be able to center the footer with 90% width same as header-container and senator-container*/
     display: flex;
     justify-content: center;
-    position: absolute;
-    bottom: 5px;
+    /*position: absolute;*/
+    /*bottom: 5px;*/
     width: 100%;
 }
 
