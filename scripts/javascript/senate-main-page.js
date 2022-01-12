@@ -4,8 +4,8 @@ import {states} from "../data/states.mjs";
 const {members : wholeSenateData} = senateData.results[0]; // this is another way: data.results[0].members;
 // This gets the whole data about only members from json file. And the property name members is renamed as wholeSenateData
 
-const statesInSenateData = () => {
-    const stateAbbreviationsInStateData = [...new Set(wholeSenateData.map(({state}) => state))].sort(); // This line gets all the state values from the whole senate data.
+const statesInCongressData = (wholeCongressData) => {
+    const stateAbbreviationsInStateData = [...new Set(wholeCongressData.map(({state}) => state))].sort(); // This line gets all the state values from the whole senate data.
                                                                                                         // To remove the duplicated values; first set is created and set is converted back to an array
                                                                                                         // This is an array like ['AL', 'AK', 'AZ',.....], But it keeps only the abbreviations, not the names.
 
@@ -13,9 +13,9 @@ const statesInSenateData = () => {
 }
 
 
-function initSenateMemberTable () {
+function initTable (wholeCongressData) {
     document.getElementById('senate-data').innerHTML = '';
-    const filteredCongressData = filterData(wholeSenateData);
+    const filteredCongressData = filterData(wholeCongressData);
     createTable(filteredCongressData);
 }
 
@@ -91,16 +91,16 @@ function createAnchorTag(anchorText, urlValue) {
     return anchorTag;
 }
 
-initSenateMemberTable();
-createStatesDropDown(statesInSenateData());   // IS THIS A GOOD PRACTICE? **************************************
+initTable(wholeSenateData);
+createStatesDropDown(statesInCongressData(wholeSenateData));   // IS THIS A GOOD PRACTICE? **************************************
 
 Array.from(document.querySelectorAll('.form-check-input'))
     .forEach(element => element
         .addEventListener('click', (event) => {
-            initTable();
+            initTable(wholeSenateData);
         }));
 
-document.querySelector('#stateList').addEventListener('change', event => initTable());
+document.querySelector('#stateList').addEventListener('change', event => initTable(wholeSenateData));
 
 
 
