@@ -34,13 +34,22 @@ header {
     font-size: 30px;
 }
 
-.senators-container, .senate-data-container, .filter-container {
+.members-container, .member-data-container, .filter-container, .navbar-container {
     display: flex;
     justify-content: center;
 }
 
-.senators, .senate-data-container table {
+.senate, .house, .member-data-container table, .navbar {
     width: 90%;
+    margin-bottom: 20px;
+}
+
+.house {
+    display: none; /* This is the default value, It is updated according to the conditions in javascript file */
+}
+
+.nav-item {
+    margin-right: 10px;
 }
 
 .filters {
@@ -96,4 +105,9 @@ footer {
 
 footer p {
     margin: 0; /*to delete default bottom margin */
+}
+
+
+.nav-item:hover .dropdown-menu {
+    display: block;
 }

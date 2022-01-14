@@ -1,20 +1,30 @@
-import {senateData} from '../data/senateData.mjs';
+import {senateData, houseData} from '../data/memberData.mjs';
 import {states} from "../data/states.mjs";
 
-const {members : wholeSenateData} = senateData.results[0]; // this is another way: data.results[0].members;
-// This gets the whole data about only members from json file. And the property name members is renamed as wholeSenateData
+const params = new URLSearchParams(window.location.search);
+const congressType = params.get('chamber');
+
+const {members : wholeData} = (congressType === 'senate' || congressType === null) ? // Destructing has been used here.
+    senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
+    houseData.results[0];                                                           // If no url parameters then we are getting senate data as default.
+
+// const wholeData = congressType === 'senate' ? senateData.results[0].members : houseData.results[0].members; // This is another way without using distracting
+
+if(congressType === 'house'){
+    document.querySelector('.senate').style.display = 'none'; // ???? After setting the display to none, how come it is set to visible later on?  ??????????????
+    document.querySelector('.house').style.display = 'block';
+}
 
 const statesInWholeMemberData = (wholeMemberData) => {
-    const stateAbbreviationsInStateData = [...new Set(wholeMemberData.map(({state}) => state))].sort(); // This line gets all the state values from the whole senate data.
+    const stateAbbreviationsInStateData = [...new Set(wholeMemberData.map(({state}) => state))].sort(); // This line gets all the state values from the whole member data.
                                                                                                         // To remove the duplicated values; first set is created and set is converted back to an array
                                                                                                         // This is an array like ['AL', 'AK', 'AZ',.....], But it keeps only the abbreviations, not the names.
 
-    return states.filter(state => stateAbbreviationsInStateData.includes(state.abbreviation));          // This line filters the state list according to the states used in the senate data.
+    return states.filter(state => stateAbbreviationsInStateData.includes(state.abbreviation));          // This line filters the state list according to the states used in the member data.
 }
 
-
 function initTable (wholeMemberData) {
-    document.getElementById('senate-data').innerHTML = '';
+    document.getElementById('member-data').innerHTML = '';
     const filteredMemberData = filterData(wholeMemberData);
     createTable(filteredMemberData);
 }
@@ -43,14 +53,14 @@ function filterData(wholeMemberData) {
     // [{name: xxx, party: D, state: MI,....}, {name: yyy, party: R, state: NY,....}, {}, .... {}] 102 objects (if not  filtered) inside the array and
     // each object has these properties: name, party, state, yearsInOffice, votePercentageWithParty and linkUrl.
     const filteredDataByParty = checkedParties.length !== 0 ?  // This line checks if any checkboxes is selected.
-        wholeMemberData.filter(({party}) => checkedParties.includes(party)) : // This line filters the senate list by party according to checked checkboxes
+        wholeMemberData.filter(({party}) => checkedParties.includes(party)) : // This line filters the member list by party according to checked checkboxes
         wholeMemberData;                                     // In case no checkbox is selected then no need to filter the data by party because we show whole data in the table in this case
 
     const filteredMemberData = selectedState.value !== "" ?  // This line checks if the state dropdown doesn't have the default value ('Select A State')
-        filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the senate list according to selected states from the dropdown
+        filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the member list according to selected states from the dropdown
         filteredDataByParty;                                   // In case the dropdown has the default value no need to filter the data according to dropdown.
 
-    return filteredMemberData         // These lines are mapping the senate data after the filters with the summary data (name, party, state,...)
+    return filteredMemberData         // These lines are mapping the meember data after the filters with the summary data (name, party, state,...)
         .map(member => ({
             name: `${member.first_name} ${member.last_name}`,
             party: member.party,
@@ -66,7 +76,7 @@ function createTable (filteredMemberData) {
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
-    const  tableBody = document.getElementById('senate-data'); // senate-data is the id of the table body element in html
+    const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
     const tableRow = document.createElement('tr');
     Object.values(member).forEach((value, index, array) => {   // Object.values(member) is ['xxx', 'D', 'MI,....]
         if (index < array.length-1){                // This condition is to filter the urls not to show in the table. Only one array has been created (summarySenateData).
@@ -91,16 +101,16 @@ function createAnchorTag(anchorText, urlValue) {
     return anchorTag;
 }
 
-initTable(wholeSenateData);
-createStatesDropDown(statesInWholeMemberData(wholeSenateData));   // IS THIS A GOOD PRACTICE? **************************************
+initTable(wholeData);
+createStatesDropDown(statesInWholeMemberData(wholeData));   // IS THIS A GOOD PRACTICE? **************************************
 
 Array.from(document.querySelectorAll('.form-check-input'))
     .forEach(element => element
         .addEventListener('click', (event) => {
-            initTable(wholeSenateData);
+            initTable(wholeData);
         }));
 
-document.querySelector('#stateList').addEventListener('change', event => initTable(wholeSenateData));
+document.querySelector('#stateList').addEventListener('change', event => initTable(wholeData));
 
 
 
