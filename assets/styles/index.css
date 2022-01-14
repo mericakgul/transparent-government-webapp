@@ -72,6 +72,17 @@ header {
 
 }
 
+#more {
+    display: none;
+}
+
+#readMoreButton {
+    border: none;
+    background-color: unset;
+    color: blue;
+    text-decoration: underline;
+}
+
 .footer-container {
     display: flex;
     justify-content: center;
