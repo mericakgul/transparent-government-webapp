@@ -52,6 +52,10 @@ header {
     margin-right: 10px;
 }
 
+.nav-item:hover .dropdown-menu {
+    display: block;
+}
+
 .filters {
     width: 90%;
     display: flex;
@@ -105,9 +109,4 @@ footer {
 
 footer p {
     margin: 0; /*to delete default bottom margin */
-}
-
-
-.nav-item:hover .dropdown-menu {
-    display: block;
 }
