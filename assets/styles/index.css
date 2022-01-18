@@ -6,8 +6,6 @@
 }
 
 .header-container {
-    display: flex;
-    justify-content: center;
     padding: 30px 0;
 }
 
@@ -36,7 +34,7 @@ header {
     font-size: 30px;
 }
 
-.navbar-container {
+.flex-container {
     display: flex;
     justify-content: center;
 }
@@ -54,11 +52,6 @@ header {
     display: block;
 }
 
-.about-us-container {
-    display: flex;
-    justify-content: center;
-}
-
 .about-us {
     display: flex;
     justify-content: space-between;
@@ -67,9 +60,8 @@ header {
     margin-bottom: 20px;
 }
 
-.about-us-container img {
+.about-us img {
     width: 200px;
-
 }
 
 #more {
@@ -81,14 +73,6 @@ header {
     background-color: unset;
     color: blue;
     text-decoration: underline;
-}
-
-.footer-container {
-    display: flex;
-    justify-content: center;
-    /*position: absolute;*/
-    /*bottom: 5px;*/
-    width: 100%;
 }
 
 footer {
