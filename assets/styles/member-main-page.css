@@ -36,7 +36,7 @@ header {
     font-size: 30px;
 }
 
-.members-container, .member-data-container, .filter-container, .navbar-container {
+.members-container, .member-data-container, .filter-container, .navbar-container, .footer-container {
     display: flex;
     justify-content: center;
 }
@@ -90,14 +90,6 @@ header {
 .state-filter select {
     width: 50%;       /* If I don't put this width, p element gets multiple lines. Why?  */
     margin-left: 10px;
-}
-
-.footer-container { /* added to be able to center the footer with 90% width same as header-container and senator-container*/
-    display: flex;
-    justify-content: center;
-    /*position: absolute;*/
-    /*bottom: 5px;*/
-    width: 100%;
 }
 
 footer {
