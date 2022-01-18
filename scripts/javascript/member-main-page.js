@@ -4,6 +4,8 @@ import {states} from "../data/states.mjs";
 const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber');
 
+const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
+
 const {members : wholeData} = (congressType === 'senate' || congressType === null) ? // Destructing has been used here.
     senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
     houseData.results[0];                                                           // If no url parameters then we are getting senate data as default.
@@ -60,13 +62,13 @@ function filterData(wholeMemberData) {
         filteredDataByParty.filter(({state}) => state === selectedState.value) :   // This line filters the member list according to selected states from the dropdown
         filteredDataByParty;                                   // In case the dropdown has the default value no need to filter the data according to dropdown.
 
-    return filteredMemberData         // These lines are mapping the meember data after the filters with the summary data (name, party, state,...)
+    return filteredMemberData         // These lines are mapping the member data after the filters with the summary data (name, party, state,...)
         .map(member => ({
             name: `${member.first_name} ${member.last_name}`,
-            party: member.party,
-            state: member.state,
-            yearsInOffice: member.seniority,
-            votePercentageWithParty: member.votes_with_party_pct,
+            party: member.party || 'N/A',  // If a property is undefined then we replace it with sting 'N/A'
+            state: member.state || 'N/A',
+            yearsInOffice: member.seniority || 'N/A',
+            votePercentageWithParty: member.votes_with_party_pct || 'N/A',
             linkUrl: member.url
         }));
 }
@@ -76,15 +78,14 @@ function createTable (filteredMemberData) {
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
-    const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
     const tableRow = document.createElement('tr');
     Object.values(member).forEach((value, index, array) => {   // Object.values(member) is ['xxx', 'D', 'MI,....]
         if (index < array.length-1){                // This condition is to filter the urls not to show in the table. Only one array has been created (summarySenateData).
                                                     // Another array for the urls wasn't created to have the consistency.
             const rowCell = document.createElement('td');
-            const rowCellText = (index === 0)
-                ? createAnchorTag(value, array[array.length-1])
-                : document.createTextNode(value);
+            const rowCellText = (index === 0 && array[array.length-1])  // This condition means: we are creating anchor tag in the name of a member in case;
+                ? createAnchorTag(value, array[array.length-1])                       // both the index is 0 which means we are creating the name cell in the table and the
+                : document.createTextNode(value);                                     // member in the loop has an url. If this condition is false then we only show the name as plain text, not as a link.
             rowCell.appendChild(rowCellText);
             tableRow.appendChild(rowCell);
         }
