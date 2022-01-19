@@ -13,7 +13,7 @@ const {members : wholeData} = (congressType === 'senate' || congressType === nul
 // const wholeData = congressType === 'senate' ? senateData.results[0].members : houseData.results[0].members; // This is another way without using distracting
 
 if(congressType === 'house'){
-    document.querySelector('.senate').style.display = 'none'; // ???? After setting the display to none, how come it is set to visible later on?  ??????????????
+    document.querySelector('.senate').style.display = 'none';
     document.querySelector('.house').style.display = 'block';
 }
 
