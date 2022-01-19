@@ -2,6 +2,8 @@ function readMore() {
     let dots = document.getElementById("dots");
     let moreText = document.getElementById("more");
     let btnText = document.getElementById("readMoreButton");
+    // let moreText = Array.from(document.getElementsByClassName("moreText"));
+
 
     if (dots.style.display === "none") {
         dots.style.display = "inline";

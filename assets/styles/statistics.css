@@ -1,0 +1,70 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Comic Sans MS";
+}
+
+.header-container {
+    padding: 30px 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+
+.logo-container span {
+    font-size: 30px;
+}
+
+.flex-container {
+    display: flex;
+    justify-content: center;
+}
+
+.navbar {
+    width: 90%;
+    margin-bottom: 20px;
+}
+
+.nav-item {
+    margin-right: 10px;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block;
+}
+
+.container {
+    margin-bottom: 20px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    width: 90%;
+    padding: 10px;
+    background-color: lightgray;
+    border: 1px solid black;
+}
+
+footer p {
+    margin: 0; /*to delete default bottom margin */
+}
