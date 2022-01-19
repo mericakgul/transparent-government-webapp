@@ -73,6 +73,7 @@ header {
     background-color: unset;
     color: blue;
     text-decoration: underline;
+    display: block;
 }
 
 footer {
