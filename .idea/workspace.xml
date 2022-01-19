@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9fdd6fc-2cb6-4fee-b975-bbc7a5e301d6" name="Changes" comment="" />
+    <list default="true" id="c9fdd6fc-2cb6-4fee-b975-bbc7a5e301d6" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/scripts/javascript/member-main-page.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/javascript/member-main-page.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
