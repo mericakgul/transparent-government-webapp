@@ -274,7 +274,7 @@ function assignDataToObject (tableType) {
     sortData(loyaltyData, 'votesWithParty', tableType);
 }
 
-function sortData(data, property, tableType, N = wholeData.length) {
+function sortData(data, property, tableType, N = wholeData.length / 10) {
     const sortedData = data.sort((memberA, memberB) => {
         return tableType === 'least' ?
             memberA[property] - memberB[property] :
