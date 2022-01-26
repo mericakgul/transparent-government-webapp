@@ -18,15 +18,15 @@ if(congressType === 'house'){
 }
 
 const statesInWholeMemberData = (wholeMemberData) => {
-    const stateAbbreviationsInStateData = [...new Set(wholeMemberData.map(({state}) => state))].sort(); // This line gets all the state values from the whole member data.
+    const stateAbbreviationsInMemberData = [...new Set(wholeMemberData.map(({state}) => state))].sort(); // This line gets all the state values from the whole member data.
                                                                                                         // To remove the duplicated values; first set is created and set is converted back to an array
                                                                                                         // This is an array like ['AL', 'AK', 'AZ',.....], But it keeps only the abbreviations, not the names.
 
-    return states.filter(state => stateAbbreviationsInStateData.includes(state.abbreviation));          // This line filters the state list according to the states used in the member data.
+    return states.filter(state => stateAbbreviationsInMemberData.includes(state.abbreviation));          // This line filters the state list according to the states used in the member data.
 }
 
 function initTable (wholeMemberData) {
-    document.getElementById('member-data').innerHTML = '';
+    tableBody.innerHTML = '';
     const filteredMemberData = filterData(wholeMemberData);
     createTable(filteredMemberData);
 }
@@ -85,7 +85,7 @@ function createTableRow(member) {    // member = {name: xxx, party: D, state: MI
             const rowCell = document.createElement('td');
             const rowCellText = (index === 0 && array[array.length-1])  // This condition means: we are creating anchor tag in the name of a member in case;
                 ? createAnchorTag(value, array[array.length-1])                       // both the index is 0 which means we are creating the name cell in the table and the
-                : document.createTextNode(value);                                     // member in the loop has an url. If this condition is false then we only show the name as plain text, not as a link.
+                : document.createTextNode(`${value}`);                                     // member in the loop has an url. If this condition is false then we only show the name as plain text, not as a link.
             rowCell.appendChild(rowCellText);
             tableRow.appendChild(rowCell);
         }
