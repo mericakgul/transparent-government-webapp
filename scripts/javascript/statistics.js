@@ -179,7 +179,8 @@ const {data: glanceData} = statistics[pageType][chamber]['glance'];
 const attendanceData = wholeData.map(member => ({       // Here the whole data is already either Senate or House and we are mapping senate or house data with three properties.
     name: `${member.first_name} ${member.last_name}`,
     missedVotes: member.missed_votes,
-    percentageMissedVotes: member.missed_votes_pct
+    percentageMissedVotes: member.missed_votes_pct,
+    linkUrl: member.url
 }))
     .filter(({percentageMissedVotes}) => percentageMissedVotes !== undefined);
 
@@ -188,7 +189,8 @@ const attendanceData = wholeData.map(member => ({       // Here the whole data i
 const loyaltyData = wholeData.map(member => ({       // Here the whole data is already either Senate or House and we are mapping senate or house data with three properties.
     name: `${member.first_name} ${member.last_name}`,
     totalVotes: member.total_votes,
-    votesWithParty: member.votes_with_party_pct
+    votesWithParty: member.votes_with_party_pct,
+    linkUrl: member.url
 }))
     .filter(({votesWithParty}) => votesWithParty !== undefined);
 
@@ -208,25 +210,25 @@ function addDescription() {
     addParagraphs();
 }
 
-function createGlanceTable(glanceData) {
+function createGlanceTable() {
     addTitleText(glanceTableTitle, 'glance', 'right');
-    glanceData.forEach(createTableRows(glanceTableBody));   // glanceData = [{party: 'Democrats', repeats: 49, percentage: 48}, {}, {}]    partyStats = {party: 'Democrats', repeats: 49, percentage: 48} and every iteration it takes the next party
+    glanceData.forEach(createGlanceTableRows);   // glanceData = [{party: 'Democrats', repeats: 49, percentage: 48}, {}, {}]    partyStats = {party: 'Democrats', repeats: 49, percentage: 48} and every iteration it takes the next party
 }
 
 function createLeastTable() {
     addTitleText(leastTableTitle, 'least');
     addTableColumnTitles(leastTableColumnTitles);
-    leastData.forEach(createTableRows(leastTableBody));
+    leastData.forEach(createLeastMostTableRows(leastTableBody));
 }
 
 function createMostTable() {
     addTitleText(mostTableTitle, 'most');
     addTableColumnTitles(mostTableColumnTitles);
-    mostData.forEach(createTableRows(mostTableBody));
+    mostData.forEach(createLeastMostTableRows(mostTableBody));
 }
 
-function addTitleText(tableTitle, titleType, alignment = 'left') {
-    tableTitle.textContent = statistics[pageType][chamber][titleType].title;
+function addTitleText(tableTitle, tableType, alignment = 'left') {
+    tableTitle.textContent = statistics[pageType][chamber][tableType].title;
     tableTitle.style.textAlign = alignment;
 }
 
@@ -250,8 +252,31 @@ function addParagraphs() {
     })
 }
 
-function createTableRows (tableName) {
+function createLeastMostTableRows (tableName) {
     return function (statisticData) {
+        const tableRow = document.createElement('tr');
+        Object.values(statisticData).forEach((value, index, array) => {   // For Glance table: Object.values(partyStats) = ['Democrats', 49, 48] and every iteration it will get the next party's statistics.
+            if (index < array.length-1){      // Not to add the url link into the table
+                const tableCell = document.createElement('td');
+
+                const tableCellText = (index === 0 && array[array.length-1])   // This condition to add the url links to names
+                    ? createAnchorTag(value, array[array.length-1])
+                    : (index === 2)                                 // this condition to put the % sign only in percentage value cell
+                    ? document.createTextNode(`${value}%`)
+                    : document.createTextNode(`${value}`);
+
+                tableCell.appendChild(tableCellText);
+                if (index !== 0) {
+                    tableCell.style.textAlign = 'center';                  // To center only the numbers not the party names.
+                }
+                tableRow.appendChild(tableCell);
+            }
+        })
+        tableName.appendChild(tableRow);
+    };
+}
+
+function createGlanceTableRows (statisticData) {
         const tableRow = document.createElement('tr');
         Object.values(statisticData).forEach((value, index) => {   // For Glance table: Object.values(partyStats) = ['Democrats', 49, 48] and every iteration it will get the next party's statistics.
             const tableCell = document.createElement('td');
@@ -264,8 +289,16 @@ function createTableRows (tableName) {
             }
             tableRow.appendChild(tableCell);
         })
-        tableName.appendChild(tableRow);
-    };
+        glanceTableBody.appendChild(tableRow);
+}
+
+function createAnchorTag(anchorText, urlValue) {
+    const anchorTag = document.createElement('a');
+    const anchorTagText = document.createTextNode(anchorText);
+    anchorTag.href = urlValue;
+    anchorTag.target = '_blank';
+    anchorTag.appendChild(anchorTagText);
+    return anchorTag;
 }
 
 function assignDataToObject (tableType) {
@@ -284,6 +317,6 @@ function sortData(data, property, tableType, N = wholeData.length / 10) {
 }
 
 addDescription();
-createGlanceTable(glanceData);
+createGlanceTable();
 createLeastTable();
 createMostTable();
