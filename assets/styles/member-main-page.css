@@ -25,13 +25,12 @@ header {
 }
 
 .logo {
-    width: 40px;
-    height: 40px;
+    width: 60px;
     margin-right: 5px;
 }
 
 .logo-container span {
-    font-size: 30px;
+    font-size: 40px;
 }
 
 .flex-container {
