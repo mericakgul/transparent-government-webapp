@@ -1,6 +1,6 @@
 import {senateData, houseData} from '../data/memberData.mjs';
 
-let statistics = {
+const statistics = {
     attendance: {
         house: {
             generalInfo: {
@@ -20,20 +20,30 @@ let statistics = {
             },
             glance: {
                 title: 'House at a Glance',
+                columnTitles: {
+                    first: 'Party',
+                    second: 'No. of Reps',
+                    third: '% Missed Votes with Party'
+                },
                 data: undefined
             },
             least: {
                 title: 'Least Engaged (Bottom 10% Attendance)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Missed Votes',
+                    third: '% Missed'
+                },
                 data: undefined
             },
             most: {
                 title: 'Most Engaged (Top 10% Attendance)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Missed Votes',
+                    third: '% Missed'
+                },
                 data: undefined
-            },
-            leastAndMostTableColumnTitles: {
-                first: 'Name',
-                second: 'No. Missed Votes',
-                third: '% Missed'
             }
         },
         senate: {
@@ -54,20 +64,30 @@ let statistics = {
             },
             glance: {
                 title: 'Senate at a Glance',
+                columnTitles: {
+                    first: 'Party',
+                    second: 'No. of Reps',
+                    third: '% Missed Votes with Party'
+                },
                 data: undefined
             },
             least: {
                 title: 'Least Engaged (Bottom 10% Attendance)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Missed Votes',
+                    third: '% Missed'
+                },
                 data: undefined
             },
             most: {
                 title: 'Most Engaged (Top 10% Attendance)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Missed Votes',
+                    third: '% Missed'
+                },
                 data: undefined
-            },
-            leastAndMostTableColumnTitles: {
-                first: 'Name',
-                second: 'No. Missed Votes',
-                third: '% Missed'
             }
         }
     },
@@ -84,20 +104,30 @@ let statistics = {
             },
             glance: {
                 title: 'House at a Glance',
+                columnTitles: {
+                    first: 'Party',
+                    second: 'No. of Reps',
+                    third: '% Voted with Party'
+                },
                 data: undefined
             },
             least: {
                 title: 'Least Loyal (Bottom 10% of Party)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Party Votes',
+                    third: '% Party Votes'
+                },
                 data: undefined
             },
             most: {
                 title: 'Most Loyal (Top 10% of Party)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Party Votes',
+                    third: '% Party Votes'
+                },
                 data: undefined
-            },
-            leastAndMostTableColumnTitles: {
-                first: 'Name',
-                second: 'No. Party Votes',
-                third: '% Party Votes'
             }
         },
         senate: {
@@ -111,20 +141,30 @@ let statistics = {
             },
             glance: {
                 title: 'Senate at a Glance',
+                columnTitles: {
+                    first: 'Party',
+                    second: 'No. of Reps',
+                    third: '% Voted with Party'
+                },
                 data: undefined
             },
             least: {
                 title: 'Least Loyal (Bottom 10% of Party)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Party Votes',
+                    third: '% Party Votes'
+                },
                 data: undefined
             },
             most: {
                 title: 'Most Loyal (Top 10% of Party)',
+                columnTitles: {
+                    first: 'Name',
+                    second: 'No. Party Votes',
+                    third: '% Party Votes'
+                },
                 data: undefined
-            },
-            leastAndMostTableColumnTitles: {
-                first: 'Name',
-                second: 'No. Party Votes',
-                third: '% Party Votes'
             }
         }
     }
@@ -138,6 +178,7 @@ const chamber = params.get('chamber') || 'senate'; // In case the url param for 
 // Retrive the elements
 const descriptionContainer = document.getElementById('description');
 const glanceTableTitle = document.getElementById('glance-table-title');
+const glanceTableColumnTitles = document.getElementById('glance-table-col-titles');
 const glanceTableBody = document.getElementById('glance-data');
 const leastTableTitle = document.getElementById('least-table-title');
 const leastTableColumnTitles = document.getElementById('least-table-col-titles');
@@ -148,28 +189,43 @@ const mostTableBody = document.getElementById('most-data');
 
 
 // Set the data from according to the chamber
-const {members: wholeData} = (chamber === 'senate' || chamber === null) ? // This data also crated in meember-main-page.js file.
+const {members: wholeData} = (chamber === 'senate' || chamber === null) ? // This data also crated in member-main-page.js file.
     senateData.results[0] :                                                         // Is there a way to use one in everywhere?
     houseData.results[0];
 
+const partyNames = {
+    D: 'Democrats',
+    R: 'Republicans',
+    ID: 'Independents'
+};
 
 // gather and form the data for the glance table
-const repeatNumberOfParties = wholeData.map((member) => {  // Here we first we update the abbreviations with the real names of the parties with map method.
-    return ({                                               // map method returns an array like ['Democrats', 'Republicans', 'Independents']
-        D: 'Democrats',                                     // Then we calculate the repeat numbers of each party and put it in an object with reduce method.
-        R: 'Republicans',                                   // reduce method returns an object like {Democrats:49, Republicans: 51, Independents: 2}
-        ID: 'Independents'
-    })[member.party];
-}).reduce((partyNumbersObject, party) => {
-    partyNumbersObject[party] = (partyNumbersObject[party] || 0) + 1;
-    return partyNumbersObject;
+const repeatNumberOfParties = wholeData.filter(({party}) => party !== undefined)
+    .map(member => getPartyFullName(member.party))                                                   // Here we first we update the abbreviations with the real names of the parties with map method.
+    .reduce((partyRepeatNumbersObject, party) => {                                                  // map method returns an array like ['Democrats', 'Republicans', 'Independents']
+    partyRepeatNumbersObject[party] = (partyRepeatNumbersObject[party] || 0) + 1;                   // Then we calculate the repeat numbers of each party and put it in an object with reduce method.
+    return partyRepeatNumbersObject;                                                                // // reduce method returns an object like {Democrats:49, Republicans: 51, Independents: 2}
 }, {});
 
+const partyStatisticsTotal = {
+    party: 'Total',
+    repeatNumber: Object.values(repeatNumberOfParties).reduce((first, second) => first + second),
+    percentage: Object.keys(repeatNumberOfParties)
+        .map(partyName => {
+            const partyAbbreviation = getPartyAbbreviation(partyName);
+            return averagePercentageValuesPerParty(partyAbbreviation);
+        }).reduce((first, second) => first + second).toFixed(2)
+}
+
 const partyStatisticsData = Object.entries(repeatNumberOfParties).reduce((partyStatistics, [party, repeatNumber]) => { // Object.entries returns an array with arrays inside like [['Democrats', 49],['Republicans', 51],['Independents','2']]
-    const percentage = Math.round((repeatNumber / wholeData.length) * 100);   // Reduce method returns an array with objects in.
+    const partyAbbreviation = getPartyAbbreviation(party);
+    const percentage = averagePercentageValuesPerParty(partyAbbreviation).toFixed(2);                       // Reduce method returns an array with objects in.
     partyStatistics.push({ party, repeatNumber, percentage });                  // The objects are holding the statistics of each party name, repeat, percentage
     return partyStatistics;
-}, [])
+}, []);
+
+partyStatisticsData.push(partyStatisticsTotal);     // This is to add the last row about the total values of the glance table
+
 
 statistics[pageType][chamber]['glance'].data = partyStatisticsData;
 const {data: glanceData} = statistics[pageType][chamber]['glance'];
@@ -182,7 +238,7 @@ const attendanceData = wholeData.map(member => ({       // Here the whole data i
     percentageMissedVotes: member.missed_votes_pct,
     linkUrl: member.url
 }))
-    .filter(({percentageMissedVotes}) => percentageMissedVotes !== undefined);
+    .filter(({percentageMissedVotes, missedVotes}) => (percentageMissedVotes !== undefined && missedVotes !== undefined)); // we use specifically undefined to be able to get the value of 0(zero)
 
 
 // gather and form the data for the loyalty least and most table
@@ -192,16 +248,32 @@ const loyaltyData = wholeData.map(member => ({       // Here the whole data is a
     votesWithParty: member.votes_with_party_pct,
     linkUrl: member.url
 }))
-    .filter(({votesWithParty}) => votesWithParty !== undefined);
-
+    .filter(({votesWithParty, totalVotes}) => (votesWithParty !== undefined && totalVotes !== undefined));      // we use specifically undefined to be able to get the value of 0(zero)
 
 // Assign sorted Attendance and  Loyalty data for least and most tables and create destructing to use while creating the tables.
 assignDataToObject('least');
-const {data: leastData} = statistics[pageType][chamber]['least'];
+const {data: leastData} = statistics[pageType][chamber]['least'];  //destruction
 
 assignDataToObject('most');
 const {data: mostData} = statistics[pageType][chamber]['most'];
 
+
+function averagePercentageValuesPerParty(partyAbbreviation) {
+    const propertyToCalculate = pageType === 'attendance' ? 'missed_votes_pct' : 'votes_with_party_pct';
+    const sumOfPropertyValuesPerParty = wholeData.filter(({party}) => party === partyAbbreviation)
+        .filter(member => member[propertyToCalculate] !== undefined)
+        .map(member => member[propertyToCalculate])
+        .reduce((previousMember, currentMember) => previousMember + currentMember);
+    return sumOfPropertyValuesPerParty / repeatNumberOfParties[getPartyFullName(partyAbbreviation)];
+}
+
+function getPartyFullName (partyAbbreviation) {
+    return partyNames[partyAbbreviation];
+}
+function getPartyAbbreviation (partyFullName) {
+    return Object.entries(partyNames).find(([_, partyName]) => partyName === partyFullName)?.[0];
+
+}
 
 function addDescription() {
     const title = document.createElement('h4');
@@ -212,18 +284,19 @@ function addDescription() {
 
 function createGlanceTable() {
     addTitleText(glanceTableTitle, 'glance', 'right');
+    addTableColumnTitles(glanceTableColumnTitles, 'glance');
     glanceData.forEach(createGlanceTableRows);   // glanceData = [{party: 'Democrats', repeats: 49, percentage: 48}, {}, {}]    partyStats = {party: 'Democrats', repeats: 49, percentage: 48} and every iteration it takes the next party
 }
 
 function createLeastTable() {
     addTitleText(leastTableTitle, 'least');
-    addTableColumnTitles(leastTableColumnTitles);
+    addTableColumnTitles(leastTableColumnTitles, 'least');
     leastData.forEach(createLeastMostTableRows(leastTableBody));
 }
 
 function createMostTable() {
     addTitleText(mostTableTitle, 'most');
-    addTableColumnTitles(mostTableColumnTitles);
+    addTableColumnTitles(mostTableColumnTitles, 'most');
     mostData.forEach(createLeastMostTableRows(mostTableBody));
 }
 
@@ -232,8 +305,8 @@ function addTitleText(tableTitle, tableType, alignment = 'left') {
     tableTitle.style.textAlign = alignment;
 }
 
-function addTableColumnTitles (tableColumnTitles) {
-    const columnTitles = statistics[pageType][chamber]['leastAndMostTableColumnTitles'];
+function addTableColumnTitles (tableColumnTitles, tableType) {
+    const columnTitles = statistics[pageType][chamber][tableType]['columnTitles'];
     Object.values(columnTitles).forEach(title => {
         const rowCell = document.createElement('th');
         rowCell.scope = 'col';
