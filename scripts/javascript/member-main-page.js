@@ -114,6 +114,14 @@ Array.from(document.querySelectorAll('.form-check-input'))
 document.querySelector('#stateList').addEventListener('change', event => initTable(wholeData));
 
 
+window.addEventListener('load', (event) => {
+    const loader = document.querySelector('#loading');
+    loader.style.display = 'none';
+});
+// window.onload = () => {
+//     const loader = document.querySelector('#loading');
+//     loader.style.display = 'none';
+// };
 
 
 //    ////////////////// To get the property names //////////////////
