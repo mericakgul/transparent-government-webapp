@@ -190,7 +190,7 @@ const loader = document.querySelector('#loading');
 
 
 // Set the data from according to the chamber
-const {members: wholeData} = (chamber === 'senate' || chamber === null) ? // This data also crated in member-main-page.js file.
+const {members: wholeData} = chamber === 'senate' ? // This data also crated in member-main-page.js file.
     senateData.results[0] :                                                         // Is there a way to use one in everywhere?
     houseData.results[0];
 

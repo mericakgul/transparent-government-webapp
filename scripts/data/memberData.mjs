@@ -1,9 +1,16 @@
-async function fetchData (congressNo, chamber) {
-  const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
-    headers:{
-      'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
-    }});
-  return await response.json();
+export async function fetchData (congressNo, chamber) {
+  try {
+    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
+      headers:{
+        'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
+      }});
+    if(!response.ok)
+      throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
+    else
+      return response.json();
+  }  catch (e){
+    alert(e);
+  }
 }
 
 export const senateData = await fetchData(117, 'senate');
