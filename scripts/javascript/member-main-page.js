@@ -2,12 +2,12 @@ import {senateData, houseData} from '../data/memberData.mjs';
 import {states} from "../data/states.mjs";
 
 const params = new URLSearchParams(window.location.search);
-const congressType = params.get('chamber');
+const congressType = params.get('chamber') || 'senate';
 
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
 const loader = document.querySelector('#loading');
 
-const {members : wholeData} = (congressType === 'senate' || congressType === null) ? // Destructing has been used here.
+const {members : wholeData} = (congressType === 'senate') ? // Destructing has been used here.
     senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
     houseData.results[0];                                                           // If no url parameters then we are getting senate data as default.
 
