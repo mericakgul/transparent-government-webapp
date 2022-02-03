@@ -171,12 +171,12 @@ const statistics = {
     }
 };
 
-// Retrive the params
+// Retrieve the params
 const params = new URLSearchParams(window.location.search);
 const pageType = params.get('page') || 'attendance'; // In case the url param for page is undefined, 'attendance' is set as default
 const congressType = params.get('chamber') || 'senate'; // In case the url param for chamber is undefined, 'senate' is set as default
 
-// Retrive the elements
+// Retrieve the elements
 const descriptionContainer = document.getElementById('description');
 const glanceTableTitle = document.getElementById('glance-table-title');
 const glanceTableColumnTitles = document.getElementById('glance-table-col-titles');
@@ -205,7 +205,7 @@ const partyNames = {
 
 // gather and form the data for the glance table
 const repeatNumberOfParties = wholeData.filter(({party}) => party !== undefined)
-    .map(member => getPartyFullName(member.party))                                                   // Here we first we update the abbreviations with the real names of the parties with map method.
+    .map(member => getPartyFullName(member.party))                                                  // Here we first we update the abbreviations with the real names of the parties with map method.
     .reduce((partyRepeatNumbersObject, party) => {                                                  // map method returns an array like ['Democrats', 'Republicans', 'Independents']
     partyRepeatNumbersObject[party] = (partyRepeatNumbersObject[party] || 0) + 1;                   // Then we calculate the repeat numbers of each party and put it in an object with reduce method.
     return partyRepeatNumbersObject;                                                                // // reduce method returns an object like {Democrats:49, Republicans: 51, Independents: 2}
