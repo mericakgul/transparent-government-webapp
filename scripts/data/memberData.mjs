@@ -9,12 +9,12 @@ export async function fetchData (congressNo, chamber) {
     else
       return response.json();
   }  catch (e){
-    alert(e);
+    throw e;
   }
 }
 
-export const senateData = await fetchData(117, 'senate');
-export const houseData = await fetchData(117, 'house');
+// export const senateData = await fetchData(117, 'senate');   // "Top level await"
+// export const houseData = await fetchData(117, 'house');
 
 
 // export const senateData =   {

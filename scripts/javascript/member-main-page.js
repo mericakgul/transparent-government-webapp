@@ -1,17 +1,48 @@
-import {senateData, houseData} from '../data/memberData.mjs';
+import {fetchData} from '../data/memberData.mjs';
 import {states} from "../data/states.mjs";
 
+const congressNumber = 117;
 const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber') || 'senate';
 
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
 const loader = document.querySelector('#loading');
 
-const {members : wholeData} = (congressType === 'senate') ? // Destructing has been used here.
-    senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
-    houseData.results[0];                                                           // If no url parameters then we are getting senate data as default.
+init();
+
+function showLoader(show = true) {
+    loader.style.visibility = show ? 'visible' : 'hidden';
+}
+
+async function init() {
+    showLoader();
+    const response = await fetchData(congressNumber, congressType);
+    const wholeData = response.results[0]['members'];
+    initTable(wholeData);
+    const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
+    createStatesDropDown(stateAbbreviationsInMemberData);
+    showLoader(false);
+}
+
+// function init() {            // This is the second way of async function by using then instead of await.
+//     showLoader();
+//     fetchData(117, congressType)
+//         .then((response) => {
+//             const wholeData = response.results[0]['members'];
+//             initTable(wholeData);
+//             const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
+//             createStatesDropDown(stateAbbreviationsInMemberData);
+//             showLoader(false);
+//         });
+// }
+
+
+// const {members : wholeData} = (congressType === 'senate') ?  //This code was from the time when using local data  // Destructing has been used here.
+//     senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
+//     houseData.results[0];                                                           // If no url parameters then we are getting senate data as default.
 
 // const wholeData = congressType === 'senate' ? senateData.results[0].members : houseData.results[0].members; // This is another way without using distracting
+
 
 if(congressType === 'house'){
     document.querySelector('.senate').style.display = 'none';
@@ -75,8 +106,7 @@ function filterData(wholeMemberData) {
 }
 
 function createTable (filteredMemberData) {
-    filteredMemberData.forEach(createTableRow);
-    loader.style.display = 'none';
+    filteredMemberData.forEach(createTableRow)
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
@@ -104,26 +134,12 @@ function createAnchorTag(anchorText, urlValue) {
     return anchorTag;
 }
 
-initTable(wholeData);
-createStatesDropDown(statesInWholeMemberData(wholeData));   // IS THIS A GOOD PRACTICE? **************************************
+Array.from(document.querySelectorAll('.form-check-input'))      //   ?????????????????????????????????????????????????????
+    .forEach(element => element                                          // When init() function is called, api call is done again even though we do not need.
+        .addEventListener('click', (event) => init()));                  // If "Top level await" is used to get the data which will be used (as in statistics.js file) then we don't have this problem
+                                                                            // But is we use async/await, then we are making api calls again and again since other functions are depended on wholeData which is a promise.
+document.querySelector('#stateList').addEventListener('change', event => init());
 
-Array.from(document.querySelectorAll('.form-check-input'))
-    .forEach(element => element
-        .addEventListener('click', (event) => {
-            initTable(wholeData);
-        }));
-
-document.querySelector('#stateList').addEventListener('change', event => initTable(wholeData));
-
-
-// window.addEventListener('load', (event) => {
-//     const loader = document.querySelector('#loading');
-//     loader.style.display = 'none';
-// });
-// window.onload = () => {
-//     const loader = document.querySelector('#loading');
-//     loader.style.display = 'none';
-// };
 
 
 //    ////////////////// To get the property names //////////////////

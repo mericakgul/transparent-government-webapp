@@ -1,5 +1,6 @@
-import {senateData, houseData} from '../data/memberData.mjs';
+import {fetchData} from '../data/memberData.mjs';
 
+const congressNumber = 117;
 const statistics = {
     attendance: {
         house: {
@@ -173,7 +174,7 @@ const statistics = {
 // Retrive the params
 const params = new URLSearchParams(window.location.search);
 const pageType = params.get('page') || 'attendance'; // In case the url param for page is undefined, 'attendance' is set as default
-const chamber = params.get('chamber') || 'senate'; // In case the url param for chamber is undefined, 'senate' is set as default
+const congressType = params.get('chamber') || 'senate'; // In case the url param for chamber is undefined, 'senate' is set as default
 
 // Retrive the elements
 const descriptionContainer = document.getElementById('description');
@@ -188,11 +189,13 @@ const mostTableColumnTitles = document.getElementById('most-table-col-titles');
 const mostTableBody = document.getElementById('most-data');
 const loader = document.querySelector('#loading');
 
+const responseFetchedData = await fetchData(congressNumber, congressType); // This is called "Top level await" which provides to use await outside of async function.
+const wholeData = responseFetchedData.results[0]['members'];
 
 // Set the data from according to the chamber
-const {members: wholeData} = chamber === 'senate' ? // This data also crated in member-main-page.js file.
-    senateData.results[0] :                                                         // Is there a way to use one in everywhere?
-    houseData.results[0];
+// const {members: wholeData} = congressType === 'senate' ? // This code is from the time when using local data // This data also crated in member-main-page.js file.
+//     senateData.results[0] :                                              // Is there a way to use one in everywhere?
+//     houseData.results[0];
 
 const partyNames = {
     D: 'Democrats',
@@ -228,8 +231,8 @@ const partyStatisticsData = Object.entries(repeatNumberOfParties).reduce((partyS
 partyStatisticsData.push(partyStatisticsTotal);     // This is to add the last row about the total values of the glance table
 
 
-statistics[pageType][chamber]['glance'].data = partyStatisticsData;
-const {data: glanceData} = statistics[pageType][chamber]['glance'];
+statistics[pageType][congressType]['glance'].data = partyStatisticsData;
+const {data: glanceData} = statistics[pageType][congressType]['glance'];
 
 
 // gather and form the data for the attendance least and most table
@@ -253,11 +256,10 @@ const loyaltyData = wholeData.map(member => ({       // Here the whole data is a
 
 // Assign sorted Attendance and  Loyalty data for least and most tables and create destructing to use while creating the tables.
 assignDataToObject('least');
-const {data: leastData} = statistics[pageType][chamber]['least'];  //destruction
+const {data: leastData} = statistics[pageType][congressType]['least'];  //destruction
 
 assignDataToObject('most');
-const {data: mostData} = statistics[pageType][chamber]['most'];
-
+const {data: mostData} = statistics[pageType][congressType]['most'];
 
 function averagePercentageValuesPerParty(partyAbbreviation) {
     const propertyToCalculate = pageType === 'attendance' ? 'missed_votes_pct' : 'votes_with_party_pct';
@@ -299,16 +301,15 @@ function createMostTable() {
     addTitleText(mostTableTitle, 'most');
     addTableColumnTitles(mostTableColumnTitles, 'most');
     mostData.forEach(createLeastMostTableRows(mostTableBody));
-    loader.style.display = 'none';
 }
 
 function addTitleText(tableTitle, tableType, alignment = 'left') {
-    tableTitle.textContent = statistics[pageType][chamber][tableType].title;
+    tableTitle.textContent = statistics[pageType][congressType][tableType].title;
     tableTitle.style.textAlign = alignment;
 }
 
 function addTableColumnTitles (tableColumnTitles, tableType) {
-    const columnTitles = statistics[pageType][chamber][tableType]['columnTitles'];
+    const columnTitles = statistics[pageType][congressType][tableType]['columnTitles'];
     Object.values(columnTitles).forEach(title => {
         const rowCell = document.createElement('th');
         rowCell.scope = 'col';
@@ -319,7 +320,7 @@ function addTableColumnTitles (tableColumnTitles, tableType) {
 }
 
 function addParagraphs() {
-    statistics[pageType][chamber]['generalInfo'].description.forEach(text => {
+    statistics[pageType][congressType]['generalInfo'].description.forEach(text => {
         const paragraph = document.createElement('p');
         const paragraphText = document.createTextNode(text);
         paragraph.appendChild(paragraphText);
@@ -377,7 +378,7 @@ function createAnchorTag(anchorText, urlValue) {
 }
 
 function assignDataToObject (tableType) {
-    statistics[pageType][chamber][tableType].data = pageType === 'attendance' ?
+    statistics[pageType][congressType][tableType].data = pageType === 'attendance' ?
     sortData(attendanceData, 'missedVotes', tableType):
     sortData(loyaltyData, 'votesWithParty', tableType);
 }
@@ -391,7 +392,16 @@ function sortData(data, property, tableType, N = wholeData.length / 10) {
     return sortedData.slice(0, N);
 }
 
-addDescription();
-createGlanceTable();
-createLeastTable();
-createMostTable();
+function showLoader(show = true) {
+    loader.style.visibility = show ? 'visible' : 'hidden';
+}
+
+// This is called IIFE (Immediately Invoked Function Expression)
+(function init() {
+    showLoader();
+    addDescription();
+    createGlanceTable();
+    createLeastTable();
+    createMostTable();
+    showLoader(false);
+})();
