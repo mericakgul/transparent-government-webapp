@@ -186,6 +186,7 @@ const leastTableBody = document.getElementById('least-data');
 const mostTableTitle = document.getElementById('most-table-title');
 const mostTableColumnTitles = document.getElementById('most-table-col-titles');
 const mostTableBody = document.getElementById('most-data');
+const loader = document.querySelector('#loading');
 
 
 // Set the data from according to the chamber
@@ -298,6 +299,7 @@ function createMostTable() {
     addTitleText(mostTableTitle, 'most');
     addTableColumnTitles(mostTableColumnTitles, 'most');
     mostData.forEach(createLeastMostTableRows(mostTableBody));
+    loader.style.display = 'none';
 }
 
 function addTitleText(tableTitle, tableType, alignment = 'left') {

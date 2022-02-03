@@ -5,6 +5,7 @@ const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber');
 
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
+const loader = document.querySelector('#loading');
 
 const {members : wholeData} = (congressType === 'senate' || congressType === null) ? // Destructing has been used here.
     senateData.results[0] :                                                         // This gets whole data about senate or house members according to the url parameter from json file  and renaming it as wholeData
@@ -75,6 +76,7 @@ function filterData(wholeMemberData) {
 
 function createTable (filteredMemberData) {
     filteredMemberData.forEach(createTableRow);
+    loader.style.display = 'none';
 }
 
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
@@ -114,10 +116,10 @@ Array.from(document.querySelectorAll('.form-check-input'))
 document.querySelector('#stateList').addEventListener('change', event => initTable(wholeData));
 
 
-window.addEventListener('load', (event) => {
-    const loader = document.querySelector('#loading');
-    loader.style.display = 'none';
-});
+// window.addEventListener('load', (event) => {
+//     const loader = document.querySelector('#loading');
+//     loader.style.display = 'none';
+// });
 // window.onload = () => {
 //     const loader = document.querySelector('#loading');
 //     loader.style.display = 'none';
