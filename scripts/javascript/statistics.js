@@ -193,8 +193,8 @@ const responseFetchedData = await fetchData(congressNumber, congressType); // Th
 const wholeData = responseFetchedData.results[0]['members'];
 
 // Set the data from according to the chamber
-// const {members: wholeData} = congressType === 'senate' ? // This code is from the time when using local data // This data also crated in member-main-page.js file.
-//     senateData.results[0] :                                              // Is there a way to use one in everywhere?
+// const {members: wholeData} = congressType === 'senate' ? // This code is from the time when using local data
+//     senateData.results[0] :
 //     houseData.results[0];
 
 const partyNames = {
