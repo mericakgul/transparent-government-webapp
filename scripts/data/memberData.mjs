@@ -1,6 +1,6 @@
 export async function fetchData (congressNo, chamber) {
   try {
-    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/membeers.json`,{
+    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
       headers:{
         'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
       }});
