@@ -1,15 +1,17 @@
 export async function fetchData (congressNo, chamber) {
   try {
-    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
+    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/membeers.json`,{
       headers:{
         'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
       }});
-    if(!response.ok)
+    const responseJSON = await response.json();
+    if(responseJSON.status >= 400 && response.status < 600)
       throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
     else
-      return response.json();
+      return responseJSON;
   }  catch (e){
-    throw e;
+    console.log('errorrrrr:', e);
+    alert(e);
   }
 }
 
