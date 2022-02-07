@@ -5,7 +5,7 @@ export async function fetchData (congressNo, chamber) {
         'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
       }});
     const responseJSON = await response.json();
-    if(responseJSON.status >= 400 && response.status < 600)
+    if(parseInt(responseJSON.status) >= 400 && parseInt(responseJSON.status) < 600)
       throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
     else
       return responseJSON;
