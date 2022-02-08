@@ -5,17 +5,16 @@ export async function fetchData (congressNo, chamber) {
         'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
       }});
     const responseJSON = await response.json();
-    if(parseInt(responseJSON.status) >= 400 && parseInt(responseJSON.status) < 600)
+    if(responseJSON.status >= 400 && responseJSON.status < 600)
       throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
     else
       return responseJSON;
   }  catch (e){
     console.log('errorrrrr:', e);
-    alert(e);
   }
 }
 
-// export const senateData = await fetchData(117, 'senate');   // "Top level await"
+// export const senateData = await fetchData(117, 'senate');   // This is called "Top level await" which provides to use await outside of async function.
 // export const houseData = await fetchData(117, 'house');
 
 

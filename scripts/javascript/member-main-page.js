@@ -7,21 +7,32 @@ const congressType = params.get('chamber') || 'senate';
 
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
 const loader = document.querySelector('#loading');
+const warning = document.querySelector('.alert');
 
 init();
+
+async function init() {
+    showWarning(false);
+    showLoader();
+    const responseFetchedData = await fetchData(congressNumber, congressType);
+    if(responseFetchedData !== undefined){
+        const wholeData = responseFetchedData.results[0]['members'];
+        initTable(wholeData);
+        const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
+        createStatesDropDown(stateAbbreviationsInMemberData);
+    }
+    else {
+        showWarning();
+    }
+    showLoader(false);
+}
 
 function showLoader(show = true) {
     loader.style.visibility = show ? 'visible' : 'hidden';
 }
 
-async function init() {
-    showLoader();
-    const response = await fetchData(congressNumber, congressType);
-    const wholeData = response.results[0]['members'];
-    initTable(wholeData);
-    const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
-    createStatesDropDown(stateAbbreviationsInMemberData);
-    showLoader(false);
+function showWarning(show = true) {
+    warning.style.display = show ? 'block' : 'none';
 }
 
 // function init() {            // This is the second way of async function by using then instead of await.

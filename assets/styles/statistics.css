@@ -73,6 +73,12 @@ header {
     z-index: 100;
 }
 
+.alert {
+    width: 90%;
+    margin: auto;
+    text-align: center;
+}
+
 footer {
     display: flex;
     justify-content: center;
