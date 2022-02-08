@@ -202,7 +202,7 @@ async function init() {
     showWarning(false);
     showLoader();
     const responseFetchedData = await fetchData(congressNumber, congressType);
-    if(responseFetchedData !== undefined){
+    if(!!responseFetchedData){
         const wholeData = responseFetchedData.results[0]['members'];
         const partyStatisticsData = getPartyStatisticsData(wholeData);
         const partyDataOfTotal = getPartyStatisticsTotal(wholeData);

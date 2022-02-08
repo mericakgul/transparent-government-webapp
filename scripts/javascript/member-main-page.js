@@ -15,7 +15,7 @@ async function init() {
     showWarning(false);
     showLoader();
     const responseFetchedData = await fetchData(congressNumber, congressType);
-    if(responseFetchedData !== undefined){
+    if(!!responseFetchedData){
         const wholeData = responseFetchedData.results[0]['members'];
         initTable(wholeData);
         const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
