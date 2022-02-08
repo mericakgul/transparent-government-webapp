@@ -6,8 +6,10 @@ const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber') || 'senate';
 
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
+const checkBoxes = document.querySelectorAll('.form-check-input');
 const loader = document.querySelector('#loading');
 const warning = document.querySelector('.alert');
+let wholeData = '';
 
 init();
 
@@ -16,15 +18,20 @@ async function init() {
     showLoader();
     const responseFetchedData = await fetchData(congressNumber, congressType);
     if(!!responseFetchedData){
-        const wholeData = responseFetchedData.results[0]['members'];
-        initTable(wholeData);
-        const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
-        createStatesDropDown(stateAbbreviationsInMemberData);
+        wholeData = responseFetchedData.results[0]['members'];
+        showContent ();
     }
     else {
+        checkBoxes.forEach(checkBox => checkBox.disabled = true);  // To disable the checkboxes in case there is no data to block calling showContent Function
         showWarning();
     }
     showLoader(false);
+}
+
+function showContent () {
+    initTable(wholeData);
+    const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
+    createStatesDropDown(stateAbbreviationsInMemberData);
 }
 
 function showLoader(show = true) {
@@ -147,9 +154,9 @@ function createAnchorTag(anchorText, urlValue) {
 
 Array.from(document.querySelectorAll('.form-check-input'))      //   ?????????????????????????????????????????????????????
     .forEach(element => element                                          // When init() function is called, api call is done again even though we do not need.
-        .addEventListener('click', (event) => init()));                  // If "Top level await" is used to get the data which will be used (as in statistics.js file) then we don't have this problem
+        .addEventListener('click', (event) => showContent()));                  // If "Top level await" is used to get the data which will be used (as in statistics.js file) then we don't have this problem
                                                                             // But is we use async/await, then we are making api calls again and again since other functions are depended on wholeData which is a promise.
-document.querySelector('#stateList').addEventListener('change', event => init());
+document.querySelector('#stateList').addEventListener('change', event => showContent());
 
 
 
