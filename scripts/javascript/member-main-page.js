@@ -5,6 +5,11 @@ const congressNumber = 117;
 const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber') || 'senate';
 
+if(congressType === 'house'){
+    document.querySelector('.senate').style.display = 'none';
+    document.querySelector('.house').style.display = 'block';
+}
+
 const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
 const checkBoxes = document.querySelectorAll('.form-check-input');
 const loader = document.querySelector('#loading');
@@ -78,11 +83,6 @@ function showWarning(show = true) {
 
 // const wholeData = congressType === 'senate' ? senateData.results[0].members : houseData.results[0].members; // This is another way without using distracting
 
-
-if(congressType === 'house'){
-    document.querySelector('.senate').style.display = 'none';
-    document.querySelector('.house').style.display = 'block';
-}
 
 const statesInWholeMemberData = (wholeMemberData) => {
     const stateAbbreviationsInMemberData = [...new Set(wholeMemberData.map(({state}) => state))].sort(); // This line gets all the state values from the whole member data.
