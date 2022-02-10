@@ -199,11 +199,11 @@ const partyNames = {
 init();
 
 async function init() {
-    showWarning(false);
-    showLoader();
-    const responseFetchedData = await fetchData(congressNumber, congressType);
-    if(!!responseFetchedData){
-        const wholeData = responseFetchedData.results[0]['members'];
+    try {
+        showWarning(false);
+        showLoader();
+        const {result} = await fetchData(congressNumber, congressType);
+        const wholeData = result.results[0]['members'];
         const partyStatisticsData = getPartyStatisticsData(wholeData);
         const partyDataOfTotal = getPartyStatisticsTotal(wholeData);
         partyStatisticsData.push(partyDataOfTotal);     // This is to add the last row about the total values of the glance table
@@ -211,8 +211,8 @@ async function init() {
         assignDataToObject('least', wholeData);
         assignDataToObject('most', wholeData);
         showAllContent();
-    }
-    else {
+    } catch ({error}) {
+        console.log('errorrrrrr', error);
         addDescription();
         showWarning();
     }

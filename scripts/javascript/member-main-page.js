@@ -9,24 +9,41 @@ const  tableBody = document.getElementById('member-data'); // member-data is the
 const checkBoxes = document.querySelectorAll('.form-check-input');
 const loader = document.querySelector('#loading');
 const warning = document.querySelector('.alert');
-let wholeData = '';
+let wholeData = '';     // wholeData const is created here instead of in init() function to be able to use it in the addEventListener function at the bottom
 
 init();
 
 async function init() {
-    showWarning(false);
-    showLoader();
-    const responseFetchedData = await fetchData(congressNumber, congressType);
-    if(!!responseFetchedData){
-        wholeData = responseFetchedData.results[0]['members'];
-        showContent ();
+    try {
+        showWarning(false);
+        showLoader();
+        const {result} = await fetchData(congressNumber, congressType);
+        wholeData = result.results[0]['members'];
+        showContent();
     }
-    else {
+    catch({error}) {
+        console.log('errorrrrrr', error);
         checkBoxes.forEach(checkBox => checkBox.disabled = true);  // To disable the checkboxes in case there is no data to block calling showContent Function
         showWarning();
     }
     showLoader(false);
 }
+
+        // Second way ///
+//  function init() {
+//     showWarning(false);
+//     showLoader();
+//     fetchData(congressNumber, congressType)
+//         .then(({result}) => {
+//             wholeData = result.results[0]['members'];
+//             showContent();
+//     })
+//         .catch(({error}) => {
+//             console.log('errorrrrrr', error);
+//             checkBoxes.forEach(checkBox => checkBox.disabled = true);  // To disable the checkboxes in case there is no data to block calling showContent Function
+//             showWarning();
+//       }).finally(() => showLoader(false))
+// }
 
 function showContent () {
     initTable(wholeData);
@@ -93,7 +110,8 @@ function createStatesDropDown (stateData) {
 }
 
 function filterData(wholeMemberData) {
-    const selectedState = Array.from(document.querySelectorAll('#stateList option')).filter(({selected}) => selected)[0]; // This line is to get the selected state from the dropdown.
+    // const selectedState = Array.from(document.querySelectorAll('#stateList option')).filter(({selected}) => selected)[0]  // This line and the following line is the sam.
+    const [selectedState] = Array.from(document.querySelectorAll('#stateList option')).filter(({selected}) => selected); // This line is to get the selected state from the dropdown.
                                                                                                                                     // This array has only one element which is the object of selected dropdown element.
     const checkedParties = Array.from(document.querySelectorAll('.form-check-input'))  // This line returns all the check-box elements as an object of each in an array.
         //.filter(member => member.checked)  // This is the first way. The bottom line is destructing.

@@ -8,11 +8,26 @@ export async function fetchData (congressNo, chamber) {
     if(responseJSON.status >= 400 && responseJSON.status < 600)
       throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
     else
-      return responseJSON;
-  }  catch (e){
-    console.log('errorrrrr:', e);
+      return {result: responseJSON, error: undefined};
+  }  catch (error){
+      return Promise.reject({result: undefined, error})
   }
 }
+
+      // Second way //
+// export function fetchData (congressNo, chamber) {
+//   fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
+//     headers:{
+//       'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
+//     }}).then(response => response.json())
+//        .then(responseJSON => {
+//           if(responseJSON.status >= 400 && responseJSON.status < 600)
+//             throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
+//           else
+//             console.log('responseJSON', responseJSON);
+//             return {result: responseJSON, error: undefined};
+//     }).catch(error => Promise.reject({result: undefined, error}));
+// }
 
 // export const senateData = await fetchData(117, 'senate');   // This is called "Top level await" which provides to use await outside of async function.
 // export const houseData = await fetchData(117, 'house');
