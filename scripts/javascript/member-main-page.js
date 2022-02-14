@@ -147,7 +147,7 @@ function createTable(filteredMemberData) {
 function createTableRow(member) {    // member = {name: xxx, party: D, state: MI,....} and getting the next object in each iteration
     const tableRow = document.createElement('tr');
     Object.values(member).forEach((value, index, array) => {   // Object.values(member) is ['xxx', 'D', 'MI,....]
-        if (index < array.length-1){                // This condition is to filter the urls not to show in the table. Only one array has been created (summarySenateData).
+        if (index < array.length - 1){                // This condition is to filter the urls not to show in the table. Only one array has been created (summarySenateData).
                                                     // Another array for the urls wasn't created to have the consistency.
             const rowCell = document.createElement('td');
             const rowCellText = (index === 0 && array[array.length - 1])  // This condition means: we are creating anchor tag in the name of a member in case;
