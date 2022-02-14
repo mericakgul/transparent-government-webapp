@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c9fdd6fc-2cb6-4fee-b975-bbc7a5e301d6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/scripts/javascript/member-main-page.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/javascript/member-main-page.js" afterDir="false" />
-    </list>
+    <list default="true" id="c9fdd6fc-2cb6-4fee-b975-bbc7a5e301d6" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -152,7 +150,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1644245130472</updated>
-      <workItem from="1644245132676" duration="30337000" />
+      <workItem from="1644245132676" duration="30544000" />
     </task>
     <task id="LOCAL-00015" summary="updated fetchData function to be able to handle the errors.">
       <created>1644251855432</created>
@@ -217,7 +215,14 @@
       <option name="project" value="LOCAL" />
       <updated>1644861872191</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="format the code">
+      <created>1644861970712</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1644861970712</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
