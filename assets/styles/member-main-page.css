@@ -85,7 +85,7 @@ header {
 }
 
 .state-filter select {
-    width: 50%;       /* If I don't put this width, p element gets multiple lines. Why?  */
+    width: 50%; /* If I don't put this width, p element gets multiple lines. Why?  */
     margin-left: 10px;
 }
 

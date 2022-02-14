@@ -5,12 +5,12 @@ const congressNumber = 117;
 const params = new URLSearchParams(window.location.search);
 const congressType = params.get('chamber') || 'senate';
 
-if(congressType === 'house'){
+if (congressType === 'house') {
     document.querySelector('.senate').style.display = 'none';
     document.querySelector('.house').style.display = 'block';
 }
 
-const  tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
+const tableBody = document.getElementById('member-data'); // member-data is the id of the table body element in html
 const checkBoxes = document.querySelectorAll('.form-check-input');
 const loader = document.querySelector('#loading');
 const warning = document.querySelector('.alert');
@@ -25,8 +25,7 @@ async function init() {
         const {result} = await fetchData(congressNumber, congressType);
         wholeData = result.results[0]['members'];
         showContent();
-    }
-    catch({error}) {
+    } catch ({error}) {
         console.log('errorrrrrr', error);
         checkBoxes.forEach(checkBox => checkBox.disabled = true);  // To disable the checkboxes in case there is no data to block calling showContent Function
         showWarning();
@@ -34,7 +33,7 @@ async function init() {
     showLoader(false);
 }
 
-        // Second way ///
+// Second way ///
 //  function init() {
 //     showWarning(false);
 //     showLoader();
@@ -50,7 +49,7 @@ async function init() {
 //       }).finally(() => showLoader(false))
 // }
 
-function showContent () {
+function showContent() {
     initTable(wholeData);
     const stateAbbreviationsInMemberData = statesInWholeMemberData(wholeData);
     createStatesDropDown(stateAbbreviationsInMemberData);
@@ -92,14 +91,14 @@ const statesInWholeMemberData = (wholeMemberData) => {
     return states.filter(state => stateAbbreviationsInMemberData.includes(state.abbreviation));          // This line filters the state list according to the states used in the member data.
 }
 
-function initTable (wholeMemberData) {
+function initTable(wholeMemberData) {
     tableBody.innerHTML = '';
     const filteredMemberData = filterData(wholeMemberData);
     createTable(filteredMemberData);
 }
 
-function createStatesDropDown (stateData) {
-    const  statesDropdown = document.getElementById('stateList'); // stateList is the id of the dropdown element in html
+function createStatesDropDown(stateData) {
+    const statesDropdown = document.getElementById('stateList'); // stateList is the id of the dropdown element in html
     stateData.forEach(({name, abbreviation}) => {
         const dropdownOption = document.createElement('option');
         dropdownOption.value = abbreviation;
@@ -141,7 +140,7 @@ function filterData(wholeMemberData) {
         }));
 }
 
-function createTable (filteredMemberData) {
+function createTable(filteredMemberData) {
     filteredMemberData.forEach(createTableRow)
 }
 
@@ -151,8 +150,8 @@ function createTableRow(member) {    // member = {name: xxx, party: D, state: MI
         if (index < array.length-1){                // This condition is to filter the urls not to show in the table. Only one array has been created (summarySenateData).
                                                     // Another array for the urls wasn't created to have the consistency.
             const rowCell = document.createElement('td');
-            const rowCellText = (index === 0 && array[array.length-1])  // This condition means: we are creating anchor tag in the name of a member in case;
-                ? createAnchorTag(value, array[array.length-1])                       // both the index is 0 which means we are creating the name cell in the table and the
+            const rowCellText = (index === 0 && array[array.length - 1])  // This condition means: we are creating anchor tag in the name of a member in case;
+                ? createAnchorTag(value, array[array.length - 1])                       // both the index is 0 which means we are creating the name cell in the table and the
                 : document.createTextNode(`${value}`);                                     // member in the loop has an url. If this condition is false then we only show the name as plain text, not as a link.
             rowCell.appendChild(rowCellText);
             tableRow.appendChild(rowCell);
@@ -175,7 +174,6 @@ Array.from(document.querySelectorAll('.form-check-input'))      //   ???????????
         .addEventListener('click', (event) => showContent()));                  // If "Top level await" is used to get the data which will be used (as in statistics.js file) then we don't have this problem
                                                                             // But is we use async/await, then we are making api calls again and again since other functions are depended on wholeData which is a promise.
 document.querySelector('#stateList').addEventListener('change', event => showContent());
-
 
 
 //    ////////////////// To get the property names //////////////////

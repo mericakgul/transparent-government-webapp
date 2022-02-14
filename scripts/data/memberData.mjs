@@ -1,20 +1,21 @@
-export async function fetchData (congressNo, chamber) {
-  try {
-    const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
-      headers:{
-        'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
-      }});
-    const responseJSON = await response.json();
-    if(responseJSON.status >= 400 && responseJSON.status < 600)
-      throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
-    else
-      return {result: responseJSON, error: undefined};
-  }  catch (error){
-      return Promise.reject({result: undefined, error})
-  }
+export async function fetchData(congressNo, chamber) {
+    try {
+        const response = await fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`, {
+            headers: {
+                'X-API-Key': 'ZOtpVNz4ptfFKTIG71HPlylBHnT5eQ6b8mttLtB5'
+            }
+        });
+        const responseJSON = await response.json();
+        if (responseJSON.status >= 400 && responseJSON.status < 600)
+            throw new Error('The data of the members haven\'t been fetched unfortunately, please try again.');
+        else
+            return {result: responseJSON, error: undefined};
+    } catch (error) {
+        return Promise.reject({result: undefined, error})
+    }
 }
 
-      // Second way //
+// Second way //
 // export function fetchData (congressNo, chamber) {
 //   fetch(`https://api.propublica.org/congress/v1/${congressNo}/${chamber}/members.json`,{
 //     headers:{

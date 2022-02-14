@@ -304,7 +304,6 @@ function getLoyaltyData(wholeData) {
 }
 
 
-
 function averagePercentageValuesPerParty(partyAbbreviation, wholeData) {
     const propertyToCalculate = pageType === 'attendance' ? 'missed_votes_pct' : 'votes_with_party_pct';
     const sumOfPropertyValuesPerParty = wholeData.filter(({party}) => party === partyAbbreviation)
@@ -315,10 +314,11 @@ function averagePercentageValuesPerParty(partyAbbreviation, wholeData) {
     return sumOfPropertyValuesPerParty / repeatNumberOfParties[getPartyFullName(partyAbbreviation)];
 }
 
-function getPartyFullName (partyAbbreviation) {
+function getPartyFullName(partyAbbreviation) {
     return partyNames[partyAbbreviation];
 }
-function getPartyAbbreviation (partyFullName) {
+
+function getPartyAbbreviation(partyFullName) {
     return Object.entries(partyNames).find(([_, partyName]) => partyName === partyFullName)?.[0];
 
 }
@@ -353,7 +353,7 @@ function addTitleText(tableTitle, tableType, alignment = 'left') {
     tableTitle.style.textAlign = alignment;
 }
 
-function addTableColumnTitles (tableColumnTitles, tableType) {
+function addTableColumnTitles(tableColumnTitles, tableType) {
     const columnTitles = statistics[pageType][congressType][tableType]['columnTitles'];
     Object.values(columnTitles).forEach(title => {
         const rowCell = document.createElement('th');
@@ -373,18 +373,18 @@ function addParagraphs() {
     })
 }
 
-function createLeastMostTableRows (tableName) {
+function createLeastMostTableRows(tableName) {
     return function (statisticData) {
         const tableRow = document.createElement('tr');
         Object.values(statisticData).forEach((value, index, array) => {   // For Glance table: Object.values(partyStats) = ['Democrats', 49, 48] and every iteration it will get the next party's statistics.
-            if (index < array.length-1){      // Not to add the url link into the table
+            if (index < array.length - 1) {      // Not to add the url link into the table
                 const tableCell = document.createElement('td');
 
-                const tableCellText = (index === 0 && array[array.length-1])   // This condition to add the url links to names
-                    ? createAnchorTag(value, array[array.length-1])
+                const tableCellText = (index === 0 && array[array.length - 1])   // This condition to add the url links to names
+                    ? createAnchorTag(value, array[array.length - 1])
                     : (index === 2)                                 // this condition to put the % sign only in percentage value cell
-                    ? document.createTextNode(`${value}%`)
-                    : document.createTextNode(`${value}`);
+                        ? document.createTextNode(`${value}%`)
+                        : document.createTextNode(`${value}`);
 
                 tableCell.appendChild(tableCellText);
                 if (index !== 0) {
@@ -397,20 +397,20 @@ function createLeastMostTableRows (tableName) {
     };
 }
 
-function createGlanceTableRows (statisticData) {
-        const tableRow = document.createElement('tr');
-        Object.values(statisticData).forEach((value, index) => {   // For Glance table: Object.values(partyStats) = ['Democrats', 49, 48] and every iteration it will get the next party's statistics.
-            const tableCell = document.createElement('td');
-            const tableCellText = index === 2 ?                       // to put the % sign only in percentage value cell
-                document.createTextNode(`${value}%`) :
-                document.createTextNode(`${value}`);
-            tableCell.appendChild(tableCellText);
-            if (index !== 0) {
-                tableCell.style.textAlign = 'center';                  // To center only the numbers not the party names.
-            }
-            tableRow.appendChild(tableCell);
-        })
-        glanceTableBody.appendChild(tableRow);
+function createGlanceTableRows(statisticData) {
+    const tableRow = document.createElement('tr');
+    Object.values(statisticData).forEach((value, index) => {   // For Glance table: Object.values(partyStats) = ['Democrats', 49, 48] and every iteration it will get the next party's statistics.
+        const tableCell = document.createElement('td');
+        const tableCellText = index === 2 ?                       // to put the % sign only in percentage value cell
+            document.createTextNode(`${value}%`) :
+            document.createTextNode(`${value}`);
+        tableCell.appendChild(tableCellText);
+        if (index !== 0) {
+            tableCell.style.textAlign = 'center';                  // To center only the numbers not the party names.
+        }
+        tableRow.appendChild(tableCell);
+    })
+    glanceTableBody.appendChild(tableRow);
 }
 
 function createAnchorTag(anchorText, urlValue) {
@@ -422,10 +422,10 @@ function createAnchorTag(anchorText, urlValue) {
     return anchorTag;
 }
 
-function assignDataToObject (tableType, wholeData) {
+function assignDataToObject(tableType, wholeData) {
     statistics[pageType][congressType][tableType].data = pageType === 'attendance' ?
-    sortData(getAttendanceData(wholeData), 'missedVotes', tableType, wholeData):
-    sortData(getLoyaltyData(wholeData), 'votesWithParty', tableType, wholeData);
+        sortData(getAttendanceData(wholeData), 'missedVotes', tableType, wholeData) :
+        sortData(getLoyaltyData(wholeData), 'votesWithParty', tableType, wholeData);
 }
 
 function sortData(data, property, tableType, wholeData) {
