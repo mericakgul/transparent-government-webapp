@@ -61,7 +61,7 @@ function showWarning(show = true) {
 
 function showAllContent() {
     const {data: glanceData} = statistics[pageType][congressType]['glance'];
-    const {data: leastData} = statistics[pageType][congressType]['least'];  //destruction
+    const {data: leastData} = statistics[pageType][congressType]['least'];  //destructing
     const {data: mostData} = statistics[pageType][congressType]['most'];
     addDescription();
     createGlanceTable(glanceData);
