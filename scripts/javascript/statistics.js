@@ -100,7 +100,7 @@ function getPartyStatisticsTotal(wholeData) {
 }
 
 function getPartyStatisticsData(wholeData) {
-    const repeatNumberOfParties = getRepeatNumberOfParties(wholeData)
+    const repeatNumberOfParties = getRepeatNumberOfParties(wholeData);
     return Object.entries(repeatNumberOfParties).reduce((partyStatistics, [party, repeatNumber]) => { // Object.entries returns an array with arrays inside like [['Democrats', 49],['Republicans', 51],['Independents','2']]
         const partyAbbreviation = getPartyAbbreviation(party);
         const percentage = averagePercentageValuesPerParty(partyAbbreviation, wholeData).toFixed(2);                       // Reduce method returns an array with objects in.
